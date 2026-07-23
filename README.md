@@ -37,7 +37,7 @@ python code/05_figures.py data/ figures/
 - saturation_curve_fits.csv — logistic + Gompertz parameters and RMSE per benchmark
 - results_master.csv — merged per-benchmark results table (basis for paper Table 4)
 
-## Known caveats (see paper Data section)
+## Known caveats
 - "First score" may postdate true benchmark release for pre-Hub benchmarks
 - Developer-reported and standardized-harness scores are mixed within benchmarks
 - Free-ceiling fits mid-curve underestimate ceilings (FrontierMath, GDPval, CritPT)
