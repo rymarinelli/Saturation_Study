@@ -1,0 +1,108 @@
+% Requires \usepackage{booktabs} and \usepackage{graphicx} (for \resizebox)
+
+\section{Saturation}
+In an initial observation of saturation in Figure \ref{fig:Saturation}, the model cards from Anthropic and OpenAI were scraped. It appears that both Cybench and CyberGym become saturated after a year or so.
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\linewidth]{Saturdation.png}
+    \caption{Enter Caption}
+    \label{fig:Saturation}
+\end{figure}
+
+Using secondary data from Epoch AI, it is able to scale the analysis. Epoch used the Inspect framework from the UK AISI. They observed a variety of benchmarks from other fields including mathematics. For each of the benchmarks, we observe the maximum scores reported for each of the releases and then resample using a step function using a monthly grid that is forward filling. The result is observed trajectories with one function per benchmark based on estimating saturation time using functional data analysis.
+
+Based on the features of the data, the trajectories may only be partially represented as functions. This is due to the benchmarks entering the study window at different time periods and stages. For instance, some benchmarks may initially score with higher values. Of the 35 initial trajectories observed, 7 are included in this analysis to understand saturation patterns due to the period required to reach their saturation points. The other benchmarks were saturated rather quickly, making it difficult to extract signal. Analysis of the trajectories applies a parametric interpolation between reports of benchmarks.
+
+Several approaches using functional analysis are used to observe saturation. The first approach is parametric. For each benchmark, monthly observations fit three-parameter logistic and Gompertz functions based on trajectories. The fitted rate parameter, $k$, captures the steepness of the sigmoid, and the fitted crossing of a ceiling defines a projected saturation date for benchmarks. The second approach uses anchoring for each of the points that are linearly interpolated at the 50\% performance threshold. It represents the registered curves in a cubic B-spline basis. Functional principal component analysis is used on the subset of curves within the window. The FPCA decomposes the sample of the curves into the functional mean and orthogonal modes of variation to better determine trajectory shape across the benchmarks (Table \ref{tab:fpca}). Lastly, a nonparametric model for each benchmark is applied. A higher threshold of 70\% is used to ensure the steepest segment has been observed. Velocity of saturation is estimated across months.
+
+\begin{table}[t]
+\centering
+\caption{Functional PCA of landmark-registered saturation trajectories (cubic B-splines, $[-12,+9]$ months around the 50\% crossing, $n=7$ fully observed curves).}
+\label{tab:fpca}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lccl}
+\toprule
+Component & Var.\ explained & Corr.\ w/ window gain & Interpretation \\
+\midrule
+PC1 & 71.0\% & $-0.87$ & Steepness of trajectory \\
+PC2 & 23.5\% & $+0.28$ & Asymmetry about midpoint \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+Benchmark lifespans are contracting (Table \ref{tab:cohorts}). Across the benchmarks with a projected saturation date before 2030, regressing lifespan on the benchmark's entry date yields a slope of $-5.4$ months per calendar year. Each successive year of benchmark introduction is associated with roughly five and a half months less useful life. By filtering to benchmarks that have reached reporting of 95\%, the lifespan of the models is shortened by 7.5 months per year. In cohort terms, benchmarks first scored before 2023 took a median of 4.7 years to saturate. For benchmarks from 2023 and 2024, they took approximately 2.7 years to saturate. Moreover, the post-2025 cohort is estimated to be saturated after roughly 2.3 years with recent benchmarks being saturated after 13 months. One benchmark, FictionLiveBench, reached saturation in under half a year.
+
+\begin{table}[t]
+\centering
+\caption{Benchmark saturation dynamics by introduction cohort. Lifespan is the interval from first frontier score to the 95\% crossing (empirical where observed, fit-implied otherwise), restricted to benchmarks with at least eight scored models and a crossing before 2030. Peak velocity is computed only for benchmarks whose frontier has passed 70\%; no 2025--2026 benchmark yet qualifies, and the fitted-$k$ entry for that cohort rests on a single benchmark and is suppressed.}
+\label{tab:cohorts}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lcccccc}
+\toprule
+Cohort & Benchmarks & \multicolumn{2}{c}{Median lifespan to 95\%} & Median $k$ & \multicolumn{2}{c}{Median peak velocity} \\
+ & ($n$) & (yr) & ($n$) & & (pts/mo) & ($n$) \\
+\midrule
+2019--2022 & 14 & 4.7 & 3  & 0.52 & 5.9  & 10 \\
+2023       & 6  & 2.7 & 5  & 1.84 & 7.0  & 6  \\
+2024       & 22 & 2.7 & 22 & 2.68 & 10.4 & 11 \\
+2025--2026 & 11 & 2.3 & 9  & ---  & ---  & 0  \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+The contraction in lifespans is driven by steepening progress curves, and this steepening is visible under each method. Under the parametric fits, $\log(k)$ increases by approximately 0.30 per year of benchmark introduction, suggesting that the steepness of progress curves multiplies by roughly $1.35\times$ per year. The median fitted rate rises from $k = 0.52$ for pre-2023 benchmarks to $k \approx 2.6$ for the 2023--2024 cohort. The functional analysis supports the premise of this comparison: the leading principal component of the registered trajectories explains 71\% of the variation in curve shape and correlates at $-0.87$ with within-window gain.
+
+The association between steepness and introduction date runs in the expected direction. However, it is underpowered on the seven fully observed curves. The nonparametric peak velocity estimate observes cohort medians rising from 5.9 points per month to 10.4. The corresponding regression of log peak velocity on introduction year gives approximately $1.09\times$ per year but does not reach significance. This analysis should be understood as triangulation (Table \ref{tab:regressions}). The strongly parametric estimate is statistically significant, with the weakly parametric and nonparametric estimates providing additional signal to support the claims. Per-benchmark estimates for a representative subset of the suite are reported in Table \ref{tab:benchmarks}.
+
+\begin{table}[t]
+\centering
+\caption{Regression estimates of the change in saturation speed. Each row regresses the stated outcome on the benchmark's introduction date; rows are ordered from strongest to weakest structural assumptions.}
+\label{tab:regressions}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{llcccc}
+\toprule
+Outcome & Sample & Slope/yr & $r$ & $p$ & $n$ \\
+\midrule
+Lifespan to 95\% (mo) & Realized + projected      & $-5.4$ & $-0.53$ & $<0.001$ & 39 \\
+Lifespan to 95\% (mo) & Realized only             & $-7.5$ & $-0.91$ & $0.011$  & 6  \\
+$\log$ fitted rate $k$ & Best sigmoid fit          & $+0.30$ ($\times1.35$) & $0.57$ & $0.0001$ & 40 \\
+$\log$ peak velocity   & Past 70\% only            & $+0.09$ ($\times1.09$) & $0.29$ & $0.15$   & 27 \\
+FPCA PC1 score         & Fully observed curves     & $+0.11$ & $0.42$ & $0.35$ & 7 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\begin{table*}[t]
+\centering
+\caption{Saturation status of selected benchmarks. ``First score'' is the first frontier observation in the dataset, which for older benchmarks may postdate true release. Fitted ceilings well below current plausibility (e.g., FrontierMath, GDPval, CritPT) are mid-curve artifacts and should be read as lower bounds, not estimates of attainable performance; GSM8K and MMLU never cross 95\% under free-ceiling fits, reflecting label-noise floors. Dashes indicate fewer than twelve monthly observations. Projections assume the fitted sigmoid and should be treated as rough extrapolations.}
+\label{tab:benchmarks}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lccccccccc}
+\toprule
+Benchmark & First score & SOTA & 95\% crossed & 95\% proj. & Lifespan (yr) & Fit & Ceiling & $k$ & Peak vel. \\
+\midrule
+HellaSwag           & 2019-11 & 95.3\% & 2023-03 & ---     & 3.4 & log. & 1.00 & 0.77 & 5.4  \\
+GSM8K               & 2020-06 & 94.5\% & ---     & ---     & --- & Gom. & 0.93 & 2.74 & 18.7 \\
+MMLU                & 2021-08 & 88.1\% & ---     & ---     & --- & Gom. & 0.86 & 2.12 & 11.4 \\
+OTIS Mock AIME      & 2023-03 & 100\%  & 2025-12 & ---     & 2.7 & Gom. & 0.94 & 3.91 & 13.4 \\
+GPQA Diamond        & 2023-03 & 94.6\% & ---     & 2026-07 & 3.3 & log. & 1.00 & 1.16 & 5.4  \\
+MATH Level 5        & 2023-06 & 98.1\% & 2025-01 & ---     & 1.6 & log. & 1.00 & 2.41 & 12.5 \\
+Cybench             & 2024-02 & 93.0\% & ---     & 2026-12 & 2.8 & log. & 1.00 & 2.50 & 13.0 \\
+FrontierMath        & 2024-06 & 52.4\% & ---     & 2028-01 & 3.6 & Gom. & 0.62 & 1.58 & ---  \\
+FrontierMath T4     & 2024-06 & 47.9\% & ---     & 2027-07 & 3.1 & log. & 0.65 & 3.28 & ---  \\
+ARC-AGI-2           & 2024-07 & 92.5\% & ---     & 2026-06 & 1.9 & log. & 0.94 & 6.20 & 15.6 \\
+CritPT              & 2024-07 & 32.3\% & ---     & 2028-03 & 3.7 & log. & 0.38 & 3.98 & ---  \\
+ARC-AGI             & 2024-09 & 98.0\% & 2026-02 & ---     & 1.4 & log. & 1.00 & 2.73 & 8.8  \\
+HLE                 & 2024-09 & 46.4\% & ---     & 2028-01 & 3.3 & Gom. & 0.98 & 0.97 & ---  \\
+SWE-bench Verified  & 2024-11 & 83.5\% & ---     & 2027-06 & 2.6 & log. & 0.78 & 5.37 & 10.4 \\
+GDPval              & 2024-11 & 49.7\% & ---     & 2027-11 & 3.0 & log. & 0.52 & 4.40 & ---  \\
+Terminal-Bench      & 2025-06 & 90.2\% & ---     & 2026-08 & 1.1 & ---  & ---  & ---  & ---  \\
+ExploitBench        & 2025-10 & 41.0\% & ---     & 2028-01 & 2.3 & ---  & ---  & ---  & ---  \\
+OSWorld-2           & 2026-02 & 20.6\% & ---     & 2027-12 & 1.8 & ---  & ---  & ---  & ---  \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}
