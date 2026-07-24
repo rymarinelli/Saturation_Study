@@ -8,7 +8,22 @@ scores hand-collected from Anthropic and OpenAI model/system cards.
 - `code/` — numbered pipeline scripts (run in order)
 - `data/` — raw long-format dataset and all derived CSVs
 - `figures/` — all generated figures (PNG)
+- `notebooks/` — exploratory / analysis notebooks (Epoch FDA analysis; LLM-CVE + model-card pipeline)
 - `paper/` — LaTeX section with tables (formal version), Markdown drafts, and tables
+
+## Model-card & LLM-CVE component
+Beyond the Epoch pipeline, `notebooks/llm_cve_dynamics.ipynb` covers the model-card and
+LLM-CVE side of the study:
+- Filters NVD CVEs to LLM-relevant ones, maps them to the OWASP Top 10 for LLM
+  Applications, and analyzes CVSS / volume trends against a non-LLM counterfactual baseline.
+- Builds the model-card cyber-capability progression and the benchmark-saturation figure
+  (Cybench, CyberGym, Cyber Range) from `data/model_card_cyber_evals.csv`.
+
+The CVE half needs the NVD JSON sparse-clone (setup documented inside the notebook); the
+model-card half runs from the CSV alone. `code/bm25_relevance.py` is a standalone module
+implementing a BM25 relevance scorer as an alternative to the regex CVE filter, with a CLI
+and regex-vs-BM25 / BM25-variant comparison utilities. Extra dependencies for this
+component (on top of the pipeline's): `seaborn rank_bm25`.
 
 ## Pipeline
 ```
@@ -36,6 +51,7 @@ python code/05_figures.py data/ figures/
 - saturation_summary.csv — per-benchmark: n, SOTA, 90%/95% crossings, projections
 - saturation_curve_fits.csv — logistic + Gompertz parameters and RMSE per benchmark
 - results_master.csv — merged per-benchmark results table (basis for paper Table 4)
+- model_card_cyber_evals.csv — cyber-eval scores (Cybench, CyberGym, Cyber Range, OpenAI Preparedness cyber-risk levels, CTF suites) hand-collected from Anthropic and OpenAI model/system cards; feeds the saturation figure's model-card panels (each row cites its `card_url`)
 
 ## Known caveats
 - "First score" may postdate true benchmark release for pre-Hub benchmarks
