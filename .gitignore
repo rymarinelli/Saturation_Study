@@ -4,3 +4,4 @@ data/cve/cache/
 __pycache__/
 .DS_Store
 .venv/
+.claude/
