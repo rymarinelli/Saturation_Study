@@ -1,0 +1,4 @@
+repo=https://github.com/fkie-cad/nvd-json-data-feeds.git
+commit=f0d2604e492b09d2fac982d704b6162bdd613079
+retrieved=2026-09-25
+commit_date=2026-09-25T14:04:08Z

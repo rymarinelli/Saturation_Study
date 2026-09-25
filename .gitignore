@@ -1,0 +1,6 @@
+# NVD snapshot clone and full-corpus intermediates (re-created by code/cve/run_all.py)
+data/cve/nvd/
+data/cve/cache/
+__pycache__/
+.DS_Store
+.venv/

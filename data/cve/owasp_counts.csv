@@ -1,0 +1,12 @@
+category,n_cves,n_scored_v3,median_v3,q1_v3,q3_v3,plot_group
+LLM01_Prompt_Injection,108,105,8.1,7.1,9.6,LLM01_Prompt_Injection
+LLM02_Sensitive_Info_Disclosure,196,193,7.5,6.5,7.8,LLM02_Sensitive_Info_Disclosure
+LLM03_Supply_Chain,462,458,8.2,7.5,9.1,LLM03_Supply_Chain
+LLM04_Data_Model_Poisoning,4,4,6.95,5.925,8.3,Other (each n<20)
+LLM05_Improper_Output_Handling,252,249,7.1,6.1,8.1,LLM05_Improper_Output_Handling
+LLM06_Excessive_Agency,51,51,7.1,5.15,7.95,LLM06_Excessive_Agency
+LLM07_System_Prompt_Leakage,1,1,7.5,7.5,7.5,Other (each n<20)
+LLM08_Vector_Embedding_Weakness,72,67,8.3,7.1,8.8,LLM08_Vector_Embedding_Weakness
+LLM09_Misinformation,3,3,6.5,6.2,7,Other (each n<20)
+LLM10_Unbounded_Consumption,294,290,7.5,6.5,7.5,LLM10_Unbounded_Consumption
+Unmapped,567,551,7.5,5.9,8.8,Unmapped

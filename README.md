@@ -11,7 +11,13 @@ scores hand-collected from Anthropic and OpenAI model/system cards.
 - `notebooks/` — exploratory / analysis notebooks (Epoch FDA analysis; LLM-CVE + model-card pipeline)
 - `paper/` — LaTeX section with tables (formal version), Markdown drafts, and tables
 
-## Model-card & LLM-CVE component
+## CVE analysis (paper §4.1): reproducible pipeline
+Every CVE number, table and figure in the paper is produced by `code/cve/`
+(`python code/cve/run_all.py`) from the NVD snapshot pinned in `data/cve/SNAPSHOT.txt`.
+Outputs go to `data/cve/*.csv`, `figures/cve/` and `paper/generated/`. See
+[`code/cve/README.md`](code/cve/README.md) for the data source, filter definitions, statistics and runtime.
+
+## Model-card & LLM-CVE component (exploratory)
 Beyond the Epoch pipeline, `notebooks/llm_cve_dynamics.ipynb` covers the model-card and
 LLM-CVE side of the study:
 - Filters NVD CVEs to LLM-relevant ones, maps them to the OWASP Top 10 for LLM

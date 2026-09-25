@@ -1,0 +1,12 @@
+owasp,2022,2023,2024,2025,2026
+LLM01_Prompt_Injection,0,2,15,31,60
+LLM02_Sensitive_Info_Disclosure,0,6,33,57,100
+LLM03_Supply_Chain,84,33,49,108,188
+LLM04_Data_Model_Poisoning,0,0,2,1,1
+LLM05_Improper_Output_Handling,0,6,42,52,152
+LLM06_Excessive_Agency,0,0,6,15,30
+LLM07_System_Prompt_Leakage,0,0,0,0,1
+LLM08_Vector_Embedding_Weakness,0,2,9,11,50
+LLM09_Misinformation,0,0,0,3,0
+LLM10_Unbounded_Consumption,80,4,29,77,104
+Unmapped,4,38,82,106,337
