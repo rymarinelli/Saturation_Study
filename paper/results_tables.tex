@@ -11,7 +11,7 @@ Cohort & Benchmarks & \multicolumn{2}{c}{Median lifespan to 95\%} & Median $k$ &
 2019--2022 & 14 & 4.7 & 3  & 0.52 & 5.9  & 10 \\
 2023       & 6  & 2.7 & 5  & 1.84 & 7.0  & 6  \\
 2024       & 22 & 2.7 & 22 & 2.68 & 10.4 & 11 \\
-2025--2026 & 11 & 2.3 & 9  & ---  & ---  & 0  \\
+2025--2026 & 12 & 2.3 & 9  & ---  & ---  & 0  \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -24,7 +24,7 @@ Cohort & Benchmarks & \multicolumn{2}{c}{Median lifespan to 95\%} & Median $k$ &
 \toprule
 Outcome & Sample & Slope/yr & $r$ & $p$ & $n$ \\
 \midrule
-Lifespan to 95\% (mo) & Realized + projected      & $-5.4$ & $-0.53$ & $<0.001$ & 39 \\
+Lifespan to 95\% (mo) & Realized + projected      & $-5.6$ & $-0.55$ & $<0.001$ & 39 \\
 Lifespan to 95\% (mo) & Realized only             & $-7.5$ & $-0.91$ & $0.011$  & 6  \\
 $\log$ fitted rate $k$ & Best sigmoid fit          & $+0.30$ ($\times1.35$) & $0.57$ & $0.0001$ & 40 \\
 $\log$ peak velocity   & Past 70\% only            & $+0.09$ ($\times1.09$) & $0.29$ & $0.15$   & 27 \\
@@ -49,7 +49,7 @@ PC2 & 23.5\% & $+0.28$ & Asymmetry about midpoint \\
 
 \begin{table*}[t]
 \centering
-\caption{Saturation status of selected benchmarks. Fitted ceilings well below plausibility (e.g., FrontierMath) are mid-curve artifacts; dashes indicate insufficient observations.}
+\caption{Saturation status of selected benchmarks. Fitted ceilings well below plausibility (e.g., FrontierMath) are mid-curve artifacts; dashes indicate insufficient observations. $^\dagger$Fewer than eight distinct scored models; shown for status but excluded from the lifespan sample.}
 \label{tab:benchmarks}
 \small
 \begin{tabular}{lccccccccc}
@@ -73,7 +73,7 @@ SWE-bench Verified  & 2024-11 & 83.5\% & ---     & 2027-06 & 2.6 & log. & 0.78 &
 GDPval              & 2024-11 & 49.7\% & ---     & 2027-11 & 3.0 & log. & 0.52 & 4.40 & ---  \\
 Terminal-Bench      & 2025-06 & 90.2\% & ---     & 2026-08 & 1.1 & ---  & ---  & ---  & ---  \\
 ExploitBench        & 2025-10 & 41.0\% & ---     & 2028-01 & 2.3 & ---  & ---  & ---  & ---  \\
-OSWorld-2           & 2026-02 & 20.6\% & ---     & 2027-12 & 1.8 & ---  & ---  & ---  & ---  \\
+OSWorld-2$^\dagger$ & 2026-02 & 20.6\% & ---     & 2027-12 & 1.8 & ---  & ---  & ---  & ---  \\
 \bottomrule
 \end{tabular}
 \end{table*}

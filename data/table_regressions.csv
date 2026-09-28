@@ -1,0 +1,6 @@
+outcome,sample,slope,r,p,n,mult
+Lifespan to 95% (months),Realized + projected crossings,-5.60756,-0.54544,0.000329436,39,
+Lifespan to 95% (months),Empirically realized crossings only,-7.48101,-0.914686,0.0106073,6,
+log fitted rate k,Best sigmoid fit per benchmark,0.291881,0.564783,0.000179976,39,1.33894
+log peak velocity,Benchmarks past 70%,0.0903466,0.28692,0.146767,27,1.09455
+FPCA PC1 score (steepness mode),Fully observed registered curves,0.109171,0.42144,0.346347,7,

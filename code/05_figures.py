@@ -10,8 +10,10 @@ import matplotlib.dates as mdates
 from scipy.optimize import curve_fit
 from scipy.ndimage import uniform_filter1d
 import warnings; warnings.filterwarnings('ignore')
+import importlib
+lifespan_sample = importlib.import_module('03_regressions_and_tables').lifespan_sample
 
-ORANGE='#C96A3B'; GREEN='#1B9E77'; T0=pd.Timestamp('2020-01-01')
+ORANGE='#C96A3B'; GREEN='#1B9E77'
 def logistic(t,t0,k): return 1.0/(1.0+np.exp(-k*(t-t0)))
 
 def frontier(panel,b):
@@ -24,10 +26,8 @@ def main(d, figdir):
     al=pd.read_csv(f'{d}/sota_aligned_at_50pct.csv')
 
     # --- time-to-saturation Gantt ---
-    s=summ.copy(); s['sat']=s['crossed_95'].fillna(s['projected_95'])
-    s=s[pd.notna(s['sat'])&(s['n_models']>=8)&(s['sat']<pd.Timestamp('2029-07-01'))]
-    s['start']=s['first_date']; s['months']=(s['sat']-s['start']).dt.days/30.44
-    s=s[s['months']>0].sort_values('start')
+    s=lifespan_sample(summ)   # same sample as the paper tables (sat_config.SAT_CUTOFF, MIN_MODELS)
+    s=s.assign(start=s['first_date']).sort_values('start')
     fig,ax=plt.subplots(figsize=(15,0.45*len(s)+2))
     for i,(_,r) in enumerate(s.iterrows()):
         emp=pd.notna(r['crossed_95'])

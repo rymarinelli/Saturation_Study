@@ -12,7 +12,7 @@ SCORE_COLS = {
  'arc_ai2_external.csv':'Challenge score','balrog_external.csv':'Average progress','bbh_external.csv':'Average',
  'bool_q_external.csv':'Score','cad_eval_external.csv':'Overall pass (%)','chess_puzzles.csv':'mean_score',
  'cl_bench_external.csv':'Overall','cl_bench_life_external.csv':'Overall','common_sense_qa_2_external.csv':'Score',
- 'critpt_external.csv':'Accuracy','cybench_external.csv':'Unguided % Solved','deepresearchbench_external.csv':None,
+ 'critpt_external.csv':'Accuracy','cursorbench_external.csv':'Score','cybench_external.csv':'Unguided % Solved','deepresearchbench_external.csv':None,
  'exploitbench_external.csv':'Mean capability','fictionlivebench_external.csv':'120k token score',
  'forecastbench_external.csv':None,'frontiercode_external.csv':'Diamond score','frontiermath.csv':'mean_score',
  'frontiermath_tier_4.csv':'mean_score','frontierswe_external.csv':None,'gbaeval_external.csv':'Overall score',
@@ -48,8 +48,11 @@ def main(src, out):
         d['benchmark']=f.replace('_external.csv','').replace('.csv','')
         frames.append(d)
     all_df=pd.concat(frames)
+    n_raw=len(all_df)
+    all_df=all_df.drop_duplicates().reset_index(drop=True)   # Epoch exports repeat some rows verbatim
     all_df.to_csv(out,index=False)
-    print(f"{all_df['benchmark'].nunique()} benchmarks, {len(all_df)} rows -> {out}")
+    print(f"{all_df['benchmark'].nunique()} benchmarks, {len(all_df)} rows "
+          f"({n_raw-len(all_df)} exact duplicate rows dropped) -> {out}")
 
 if __name__=='__main__':
     main(sys.argv[1], sys.argv[2])
