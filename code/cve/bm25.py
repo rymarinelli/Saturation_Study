@@ -16,7 +16,6 @@ and the two filters are compared at the same retention budget.
 from __future__ import annotations
 
 import numpy as np
-import pandas as pd
 from rank_bm25 import BM25L, BM25Okapi, BM25Plus
 
 from lexicon import LLM_QUERY_TERMS
@@ -51,42 +50,3 @@ def budget_threshold(scores: np.ndarray, n_keep: int) -> float:
     if n_keep <= 0:
         return float(np.max(scores) + 1)
     return float(np.sort(scores)[::-1][min(n_keep, len(scores)) - 1])
-
-
-def sweep_thresholds(scores: np.ndarray, regex_labels: np.ndarray,
-                     n_steps: int = 60) -> pd.DataFrame:
-    """For a grid of thresholds: BM25-positive count and agreement with the
-    keyword filter (regex-relative 'precision'/'recall' — NOT against truth)."""
-    scores = np.asarray(scores, float)
-    reg = np.asarray(regex_labels, bool)
-    grid = np.linspace(float(np.min(scores)), float(np.max(scores)), n_steps)
-    rows = []
-    n = len(scores)
-    for thr in grid:
-        pred = scores >= thr
-        tp = int(np.sum(pred & reg))
-        fp = int(np.sum(pred & ~reg))
-        fn = int(np.sum(~pred & reg))
-        prec = tp / (tp + fp) if (tp + fp) else np.nan
-        rec = tp / (tp + fn) if (tp + fn) else np.nan
-        f1 = (2 * prec * rec / (prec + rec)
-              if (prec and rec and not np.isnan(prec) and not np.isnan(rec)) else np.nan)
-        rows.append({"threshold": thr, "bm25_pos": int(np.sum(pred)),
-                     "bm25_pos_rate": np.sum(pred) / n, "agreement": float(np.mean(pred == reg)),
-                     "precision_vs_regex": prec, "recall_vs_regex": rec, "f1_vs_regex": f1})
-    return pd.DataFrame(rows)
-
-
-def suggest_threshold(scores: np.ndarray, regex_labels: np.ndarray,
-                      strategy: str = "match_regex_rate") -> float:
-    """match_regex_rate (paper default) | max_f1 | percentile95."""
-    scores = np.asarray(scores, float)
-    reg = np.asarray(regex_labels, bool)
-    if strategy == "match_regex_rate":
-        return budget_threshold(scores, int(np.sum(reg)))
-    if strategy == "max_f1":
-        sw = sweep_thresholds(scores, reg).dropna(subset=["f1_vs_regex"])
-        return float(sw.loc[sw["f1_vs_regex"].idxmax(), "threshold"]) if not sw.empty else float(np.median(scores))
-    if strategy == "percentile95":
-        return float(np.percentile(scores, 95))
-    raise ValueError(f"unknown strategy: {strategy}")

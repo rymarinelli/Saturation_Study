@@ -73,8 +73,12 @@ def main(d):
     t2['mult']=np.where(t2['mult']=='x',np.exp(t2['slope']),np.nan)
 
     # --- Table 3: FPCA ---
+    # Eigenfunction signs are arbitrary; reported with the paper's convention
+    # (PC1 = steepness, negative correlation with within-window gain; PC2 positive).
     t3=pd.DataFrame({'component':['PC1','PC2'],'variance_explained':fp['evr'],
-                     'corr_with_gain':[-abs(fp['corr'][0]),abs(fp['corr'][1])],'n':len(fp['names'])})
+                     'corr_with_gain':[-abs(fp['corr'][0]),abs(fp['corr'][1])],
+                     'interpretation':['Steepness of the saturation trajectory','Asymmetry about the 50% crossing'],
+                     'n':len(fp['names'])})
 
     # --- Table 4 + results_master ---
     m=summ.merge(best[['benchmark','model','ceiling','rate_k','rmse']],on='benchmark',how='left')\
@@ -132,9 +136,8 @@ def write_markdown(t1,t2,t3,t4,summ):
         "concordant in sign with the parametric estimates.",'',
         '## Table 3. Functional principal component analysis of registered trajectories','',
         '| Component | Variance explained | Correlation with within-window gain | Interpretation |','|---|---|---|---|']
-    interp=['Steepness of the saturation trajectory','Asymmetry about the 50% crossing']
-    for i,(_,x) in enumerate(t3.iterrows()):
-        L.append(f"| {x['component']} | {100*x['variance_explained']:.1f}% | {m(f'{x.corr_with_gain:+.2f}')} | {interp[i]} |")
+    for _,x in t3.iterrows():
+        L.append(f"| {x['component']} | {100*x['variance_explained']:.1f}% | {m(f'{x.corr_with_gain:+.2f}')} | {x['interpretation']} |")
     L+=['',f"*Notes.* Trajectories landmark-registered at the interpolated 50% crossing, represented in a cubic B-spline basis "
         f"(7 basis functions) on [−12, +9] months, n = {int(t3['n'].iloc[0])} benchmarks with full coverage of the window. The dominant "
         f"mode of shape variation is steepness, supporting rate as the natural object of study independent of any sigmoid assumption.",'',

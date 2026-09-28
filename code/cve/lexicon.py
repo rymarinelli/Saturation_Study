@@ -6,8 +6,8 @@ lexicon.py — the single source of truth for every word list the CVE pipeline u
   * BM25 query:                         BM25_QUERY_SOURCE_TERMS -> LLM_QUERY_TERMS
   * OWASP Top 10 for LLM Applications (2025) mapping: OWASP_LLM -> categorize_owasp()
 
-The patterns are carried over verbatim from the exploratory notebook
-(notebooks/llm_cve_dynamics.ipynb, "Filter rules" and "OWASP mapping" cells).
+The patterns are carried over verbatim from the exploratory analysis that produced the
+AISec '26 numbers.
 All rules are hand-written; no LLM is used to label or map any CVE.
 """
 
@@ -143,29 +143,6 @@ BM25_QUERY_SOURCE_TERMS = [
 ]
 # Flattened through the same tokenizer so phrases fold exactly like documents.
 LLM_QUERY_TERMS = sorted({tok for term in BM25_QUERY_SOURCE_TERMS for tok in tokenize(term)})
-_QUERY_SET = frozenset(LLM_QUERY_TERMS)
-
-# Unambiguously LLM/GenAI terms (used only to triage disagreements in the notebook).
-HIGH_SIGNAL_TERMS = frozenset({
-    "chatgpt", "gpt", "claude", "gemini", "llama", "mistral", "mixtral", "qwen",
-    "deepseek", "grok", "cohere", "openai", "anthropic",
-    "llm", "large_language_model", "generative_ai", "genai", "prompt_injection",
-    "jailbreak", "prompt_leakage", "system_prompt", "rag", "retrieval_augmented",
-    "hallucination",
-    "langchain", "llamaindex", "vllm", "ollama", "llamafile", "litellm", "dspy",
-    "crewai", "autogpt", "autogen", "memgpt", "koboldcpp", "flowise", "dify",
-    "anythingllm", "comfyui", "guardrails", "safetensors",
-    "chromadb", "pinecone", "weaviate", "milvus", "qdrant", "faiss",
-})
-
-
-def matched_query_terms(tokens) -> list[str]:
-    """Which query terms occur in a document (why BM25 scored it at all)."""
-    return sorted(set(tokens) & _QUERY_SET)
-
-
-def has_high_signal(tokens) -> bool:
-    return bool(set(tokens) & HIGH_SIGNAL_TERMS)
 
 
 # ─────────────────────────────────────────────────────────────────────────────

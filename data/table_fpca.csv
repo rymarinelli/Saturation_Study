@@ -1,3 +1,3 @@
-component,variance_explained,corr_with_gain,n
-PC1,0.709622,-0.868035,7
-PC2,0.234632,0.281851,7
+component,variance_explained,corr_with_gain,interpretation,n
+PC1,0.709622,-0.868035,Steepness of the saturation trajectory,7
+PC2,0.234632,0.281851,Asymmetry about the 50% crossing,7

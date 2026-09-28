@@ -1,7 +1,7 @@
 """Functional data analysis: landmark-registered FPCA of saturation trajectories.
 Usage: python 04_fda_analysis.py <output_dir_from_step_02>
 Requires: scikit-fda (pip install scikit-fda; with Python >= 3.14 also multimethod==1.12)
-Writes table_fpca.csv and fpca_scores.csv; fpca() is also used by step 03 for the PC1 regression.
+Writes fpca_scores.csv; fpca() is also used by step 03, which writes Table 3 (table_fpca.csv).
 """
 import pandas as pd, numpy as np, sys
 import skfda
@@ -33,13 +33,6 @@ def fpca(d):
 def main(d):
     r=fpca(d)
     print(f"04: {r['n_aligned']} benchmarks cross 50%; n fully observed = {len(r['names'])}: {r['names']}")
-    # Eigenfunction signs are arbitrary; reported with the paper's convention
-    # (PC1 = steepness, negative correlation with within-window gain; PC2 positive).
-    pd.DataFrame({'component':['PC1','PC2'],
-                  'variance_explained':np.round(r['evr'],4),
-                  'corr_with_gain':[-abs(r['corr'][0]),abs(r['corr'][1])],
-                  'interpretation':['Steepness of the saturation trajectory','Asymmetry about the 50% crossing'],
-                  'n':len(r['names'])}).to_csv(f'{d}/table_fpca.csv',index=False)
     pd.DataFrame({'benchmark':r['names'],'intro_yr':r['iy'],'pc1':r['scores'][:,0],'pc2':r['scores'][:,1]})\
       .to_csv(f'{d}/fpca_scores.csv',index=False,float_format='%.6g')
     print("   explained variance:",np.round(r['evr'],3),"corr with gain:",np.round(r['corr'],2))

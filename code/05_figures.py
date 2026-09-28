@@ -1,24 +1,17 @@
-"""All figures: saturation grid, timeline, styled per-benchmark plots, time-to-saturation
-Gantt, and 50%-aligned overlay. Usage: python 05_figures.py <data_dir> <fig_dir>
-Chart style matches the model-card figures: orange (#C96A3B) lines with labeled points,
-dashed gray 100% saturation line, bold titles.
+"""Saturation figures: time-to-saturation Gantt (same sample as the paper tables) and the
+50%-aligned overlay. Usage: python 05_figures.py <data_dir> <fig_dir>
+Chart style matches the model-card figures: orange (#C96A3B) lines, dashed gray 100% line, bold titles.
 """
-import pandas as pd, numpy as np, sys, os
+import pandas as pd, sys, os
 import matplotlib; matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-from scipy.optimize import curve_fit
-from scipy.ndimage import uniform_filter1d
 import warnings; warnings.filterwarnings('ignore')
 import importlib
+from sat_config import DATA_DATE
 lifespan_sample = importlib.import_module('03_regressions_and_tables').lifespan_sample
 
 ORANGE='#C96A3B'; GREEN='#1B9E77'
-def logistic(t,t0,k): return 1.0/(1.0+np.exp(-k*(t-t0)))
-
-def frontier(panel,b):
-    g=panel[panel.benchmark==b].sort_values('month')
-    return g['month'].values, g['sota'].values
 
 def main(d, figdir):
     panel=pd.read_csv(f'{d}/sota_monthly_panel.csv',parse_dates=['month'])
@@ -34,7 +27,7 @@ def main(d, figdir):
         ax.plot([r['start'],r['sat']],[i,i],lw=6,color=ORANGE,alpha=0.95 if emp else 0.35,solid_capstyle='butt')
         ax.plot(r['sat'],i,'o',ms=8,color=ORANGE if emp else 'white',mec=ORANGE,mew=1.8)
         ax.text(r['sat'],i,f"  {r['benchmark'].replace('_',' ')} — {r['months']/12:.1f} yr"+('' if emp else ' (proj.)'),va='center',fontsize=10.5)
-    ax.axvline(pd.Timestamp.today(),color='gray',ls='--',lw=1.2)
+    ax.axvline(DATA_DATE,color='gray',ls='--',lw=1.2)   # data retrieval date (not "today"), for reproducibility
     ax.set_yticks([]); ax.set_ylim(-1,len(s)+0.5)
     ax.set_title('How long until a benchmark saturates?  (bar = first frontier score → SOTA ≥95 %; faded = projected)',fontsize=15,fontweight='bold')
     ax.xaxis.set_major_locator(mdates.YearLocator()); ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))

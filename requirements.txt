@@ -1,0 +1,8 @@
+# All pipelines (saturation, model-card figure, CVE). Tested with Python 3.14.3.
+numpy==2.4.0
+pandas==2.3.3
+scipy==1.17.0
+matplotlib==3.10.9
+scikit-fda==0.10.1
+multimethod==1.12   # scikit-fda 0.10.1 fails with multimethod 2.x on Python >= 3.14
+rank_bm25==0.2.2

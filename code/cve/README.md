@@ -11,7 +11,7 @@ This pipeline produces every CVE number, table and figure in the paper's descrip
 ## Re-running
 
 ```bash
-python -m venv .venv && .venv/bin/pip install -r code/cve/requirements.txt
+python -m venv .venv && .venv/bin/pip install -r requirements.txt
 .venv/bin/python code/cve/run_all.py              # fetches the pinned snapshot if data/cve/nvd is missing
 .venv/bin/python code/cve/run_all.py --nvd DIR    # reuse a clone (must be at the pinned SHA)
 ```
@@ -38,11 +38,25 @@ bash code/cve/check_anonymity.sh                              # no identifying s
 
 **BM25 is not an independent validator.** Its query is the keyword lexicon, and its threshold is set by count. Agreement between the two filters therefore bounds *specification* sensitivity (hard regex vs graded, rarity-weighted, length-normalized matching of the same vocabulary), not validity. No ground-truth labels exist, and none were created.
 
+**Why Okapi BM25.** During development (on an earlier NVD snapshot), the same corpus was scored under Okapi, BM25L and BM25+ at the equal-budget threshold. BM25+ was rank-identical to Okapi: its δ adds a near-uniform baseline. BM25L diverged from the keyword set (Jaccard about 68% → 49%), and the extra CVEs it kept were about six times longer than the corpus average. Its length correction was pulling in long records that mention an LLM only in passing. Plain Okapi is therefore used.
+
 The full pattern lists are in [`lexicon.py`](lexicon.py) and are exported verbatim to `paper/generated/cve_lexicon.tex`.
 
 ## OWASP Top 10 for LLM Applications (2025) mapping
 
 Rule-based, in `lexicon.categorize_owasp`. A CVE gets every category whose description regex matches or whose CWE set intersects the record's CWEs. Tier-2 CVEs without a match default to LLM03. Categories with fewer than 20 CVEs are merged into "Other" in the figure, and CVEs matching no category are reported as "Unmapped".
+
+The CWE sets follow how CVE analysts typically classify these weaknesses:
+
+| Category | CWEs | Rationale |
+|---|---|---|
+| LLM02 Sensitive information disclosure | 200, 201, 209, 359, 532, 538, 540 | information-disclosure family |
+| LLM03 Supply chain | 78, 94, 502, 829, 915, 1188, 1395 | deserialization, code injection, malicious or vulnerable dependencies |
+| LLM05 Improper output handling | 79, 80, 601, 918 | XSS, SSRF, open redirect: typical when model output is rendered or followed |
+| LLM06 Excessive agency | 269, 285, 732 | authorization bypass on tool-call surfaces |
+| LLM10 Unbounded consumption | 400, 674, 770, 789, 834, 835 | resource exhaustion |
+
+LLM01, LLM04, LLM07 and LLM09 deliberately have no CWE component: they describe model behaviors that the CWE taxonomy does not model directly, so they are matched on description patterns only.
 
 ## Statistics
 
@@ -69,6 +83,6 @@ Rule-based, in `lexicon.categorize_owasp`. A CVE gets every category whose descr
 
 The LaTeX fragments in `paper/generated/` (`cve_numbers.tex` macros, `cve_tables.tex`, `cve_lexicon.tex`) are generated from these CSVs by `texgen.py`. Figures go to `figures/cve/`.
 
-## Relation to the exploratory notebook
+## Relation to the earlier exploratory analysis
 
-`notebooks/llm_cve_dynamics.ipynb` is the original exploratory analysis. The paper numbers come from this pipeline, not from the notebook. Differences: rejected records are excluded, pre-2022 ID directories are scanned (publish-date binning), CVSS v4.0 and the NVD/CNA source are recorded, BM25 enters the analysis set, and uncertainty is quantified. With the notebook's settings, the scanner reproduces the notebook's kept set exactly (`verify.py legacy`).
+An earlier exploratory notebook (not part of this artifact) produced the AISec '26 numbers. The paper numbers come from this pipeline. Differences: rejected records are excluded, pre-2022 ID directories are scanned (publish-date binning), CVSS v4.0 and the NVD/CNA source are recorded, BM25 enters the analysis set, and uncertainty is quantified. With the notebook's settings, the scanner reproduces the notebook's kept set exactly (`verify.py legacy`).

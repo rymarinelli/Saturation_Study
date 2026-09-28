@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Fail if any tracked file (or, with --export DIR, an exported tree) contains an
-# author-identifying string. Run before syncing the anonymous artifact mirror.
+# author-identifying string listed in the untracked file .anon_terms. Run before syncing the anonymous artifact mirror.
 #
 #   bash code/cve/check_anonymity.sh              # scan tracked files at HEAD
 #   bash code/cve/check_anonymity.sh --export DIR # scan an exported tree
@@ -9,7 +9,12 @@
 # metadata is not part of the anonymous mirror, but is reported for information.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
-PATTERN='rymarinelli|marinelli|kopp|cedric|mail\.cedrickopp|chetwyn|adepoju|sara ?hobe|uio\.no|university of oslo|mediafutures|frankfurt ai safety'
+TERMS_FILE="$ROOT/.anon_terms"   # one extended regex of identifying strings; gitignored, never published
+if [[ ! -s "$TERMS_FILE" ]]; then
+    echo "Create $TERMS_FILE with the identifying strings to search for (one regex, e.g. 'name1|name2')." >&2
+    exit 2
+fi
+PATTERN="$(head -1 "$TERMS_FILE")"
 
 if [[ "${1:-}" == "--export" ]]; then
     hits="$(grep -rIniE "$PATTERN" "$2" | grep -v '"image/png"' | grep -vE '^[^:]+:[0-9]+:\s*"[A-Za-z0-9+/=]{40,}' || true)"

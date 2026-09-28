@@ -2,6 +2,7 @@
 import pandas as pd
 
 T0 = pd.Timestamp('2020-01-01')           # time origin for regressions and fits
+DATA_DATE = pd.Timestamp('2026-07-14')    # Epoch AI Benchmarking Hub export retrieved on this date
 SAT_CUTOFF = pd.Timestamp('2030-01-01')   # lifespan sample: realized/projected 95% crossing before 2030
 MIN_MODELS = 8                            # lifespan sample: at least eight distinct scored models
 COHORTS = [(2019, 2023), (2023, 2024), (2024, 2025), (2025, 2027)]  # [lo, hi) by first-score year
