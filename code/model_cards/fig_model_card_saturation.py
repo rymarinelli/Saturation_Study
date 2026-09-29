@@ -4,7 +4,7 @@ agentic-offense scores (CyberGym, Anthropic; Cyber Range, OpenAI) by model-card 
 
 Usage: python code/model_cards/fig_model_card_saturation.py [data/model_card_cyber_evals.csv] [figures/]
 
-Input is the hand-collected model-card table; each row cites its card_url. Each line shows the
+Input is the model-card table, extracted from the cards with LLM assistance; each row cites its card_url. Each line shows the
 frontier: the highest-scoring model per card date and vendor (a smaller model released in the
 same month is omitted by rule, not by hand).
 """

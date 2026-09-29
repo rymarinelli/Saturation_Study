@@ -4,7 +4,7 @@ Code and data for the paper's three analyses:
 
 1. **Benchmark saturation** (Section 5, Tables 1–4) from the Epoch AI Benchmarking Hub
    (https://epoch.ai/benchmarks, CC-BY 4.0, retrieved 14 July 2026).
-2. **Model-card cyber evaluations** (figure "Saturation Reported from Model Cards"): scores hand-collected
+2. **Model-card cyber evaluations** (figure "Saturation Reported from Model Cards"): scores extracted with LLM assistance (Claude) and checked against the card text
    from frontier developers' model/system cards and technical reports.
 3. **LLM-related CVEs** (Section 4.1, CVE tables and figures) from a pinned NVD snapshot.
 
@@ -70,5 +70,5 @@ See [`code/cve/README.md`](code/cve/README.md) for the data source, filter defin
 - `results_master.csv`: merged per-benchmark results (summary, best fit, peak velocity, lifespan-sample flag)
 - `table_cohorts.csv`, `table_regressions.csv`, `table_fpca.csv`, `table_status.csv`: paper Tables 1–4 (rendered to `paper/results_tables.md`)
 - `fpca_scores.csv`: per-benchmark FPCA scores
-- `model_card_cyber_evals.csv`: cyber-evaluation results for 48 models from the model cards and technical reports of Anthropic, OpenAI, Google DeepMind, xAI, Meta and DeepSeek (2023 to September 2026), hand-collected; each row cites its `card_url`. The figure plots Anthropic and OpenAI only (`PLOT_VENDORS`); other labs' rows are kept in the table
+- `model_card_cyber_evals.csv`: cyber-evaluation results for 48 models from 43 model cards and technical reports of Anthropic, OpenAI, Google DeepMind, xAI, Meta and DeepSeek (2023 to September 2026), extracted with LLM assistance (Claude) and checked against the card text; each row cites its `card_url` and pages. The figure plots Anthropic and OpenAI only (`PLOT_VENDORS`); other labs' rows are kept in the table. Values are as reported in each card; where a card gives no number, the value comes from a later card's comparison, and `source_notes`/`methodology_notes` say which. `asl_level` is the AI Safety Level of the deployment safeguards a card states, not a cyber-specific level; `firefox_exploit_partial_pct` is the share of trials with at least partial progress (cumulative)
 - `cve/`: CVE snapshot pin, per-CVE analysis set and all CVE tables (see `code/cve/README.md`)
