@@ -1,5 +1,5 @@
 # All pipelines (saturation, model-card figure, CVE). Tested with Python 3.14.3.
-numpy==2.4.0
+numpy==2.4.6
 pandas==2.3.3
 scipy==1.17.0
 matplotlib==3.10.9
