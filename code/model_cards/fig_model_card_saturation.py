@@ -1,4 +1,5 @@
-"""Paper figure "Saturation Reported from Model Cards": Cybench pass@30 (Anthropic) and
+"""Paper figure "Saturation Reported from Model Cards": Cybench as reported (Anthropic; pass@30 for
+Claude 3.5/3.7 Sonnet, average pass@1 from Claude Sonnet 4.5 on) and
 agentic-offense scores (CyberGym, Anthropic; Cyber Range, OpenAI) by model-card date.
 
 Usage: python code/model_cards/fig_model_card_saturation.py [data/model_card_cyber_evals.csv] [figures/]
@@ -16,6 +17,7 @@ plt.rcParams.update({"font.size": 10, "axes.titleweight": "bold", "axes.spines.t
                      "axes.spines.right": False})
 
 VENDOR_COLORS = {"OpenAI": "#10a37f", "Anthropic": "#c96a3e"}
+PLOT_VENDORS = set(VENDOR_COLORS)   # the paper plots these two; other labs' rows stay in the table only
 LABEL_NUDGE = {}   # {"model name": (days_right, score_up)} to move one label by hand
 
 def _num(s):
@@ -41,6 +43,7 @@ def load(path):
     rows = []
     for _, r in mc.iterrows():
         if not r["model_name"].strip() or not r["card_date"].strip(): continue
+        if r["lab"].strip() not in PLOT_VENDORS: continue
         for col, parse, series in METRICS:
             v = parse(r[col])
             if pd.notna(v):
@@ -105,8 +108,8 @@ def _panel(ax, d, series, title, ylabel, fs, legend_fs):
 def main(src, figdir):
     d = load(src)
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(13, 8), gridspec_kw={"hspace": 0.5})
-    _panel(ax1, d, ["Cybench"], "Cybench pass@30 over time  (100 % line = benchmark saturation)",
-           "Cybench Pass@30 (%)", 7.5, 9)
+    _panel(ax1, d, ["Cybench"], "Cybench over time, as reported in each card  (100 % line = benchmark saturation)",
+           "Cybench score (%)", 7.5, 9)
     _panel(ax2, d, ["CyberGym", "Cyber Range"], "Agentic offense: CyberGym (Anthropic) and Cyber Range (OpenAI)",
            "Score (%)", 7, 8.5)
     os.makedirs(figdir, exist_ok=True)

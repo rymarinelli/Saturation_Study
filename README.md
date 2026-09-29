@@ -70,5 +70,5 @@ See [`code/cve/README.md`](code/cve/README.md) for the data source, filter defin
 - `results_master.csv`: merged per-benchmark results (summary, best fit, peak velocity, lifespan-sample flag)
 - `table_cohorts.csv`, `table_regressions.csv`, `table_fpca.csv`, `table_status.csv`: paper Tables 1–4 (rendered to `paper/results_tables.md`)
 - `fpca_scores.csv`: per-benchmark FPCA scores
-- `model_card_cyber_evals.csv`: cyber-evaluation results from 37 model cards and technical reports of Anthropic, OpenAI, Google DeepMind, Meta and DeepSeek (2023–2026), hand-collected; each row cites its `card_url`. Only Anthropic and OpenAI report comparable longitudinal scores (see the paper's Method section)
+- `model_card_cyber_evals.csv`: cyber-evaluation results for 48 models from the model cards and technical reports of Anthropic, OpenAI, Google DeepMind, xAI, Meta and DeepSeek (2023 to September 2026), hand-collected; each row cites its `card_url`. The figure plots Anthropic and OpenAI only (`PLOT_VENDORS`); other labs' rows are kept in the table
 - `cve/`: CVE snapshot pin, per-CVE analysis set and all CVE tables (see `code/cve/README.md`)
